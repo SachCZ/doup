@@ -1,5 +1,5 @@
 #/usr/bin/env bash
-_docker-up()
+_doup()
 {
     if [ "${#COMP_WORDS[@]}" != "2" ]; then
         return
@@ -12,4 +12,4 @@ _docker-up()
     COMPREPLY=($(compgen -W "${replies[*]}" "${COMP_WORDS[1]}"))
 }
 
-complete -F _docker-up docker-up
+complete -F _doup doup

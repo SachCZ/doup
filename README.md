@@ -13,7 +13,7 @@ You must set an `env` variable pointing to a dir containing your dockerfiles (`<
 `.bashrc`:
 
 ```
-export DOUP_SEARCHDIR = <searchdir>
+export DOUP_SEARCHDIR=<searchdir>
 ```
 
 ## Usage
