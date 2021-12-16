@@ -5,7 +5,7 @@ _docker-up()
         return
     fi
     local replies=()
-    for entry in "${DOCKER_UP_DOCKERFILES}"/Dockerfile.*
+    for entry in "${DOUP_SEARCHDIR}"/Dockerfile.*
     do
         replies+=($( awk -F'Dockerfile.' '{print $2}' <<< $entry))
     done

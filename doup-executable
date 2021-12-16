@@ -7,7 +7,7 @@ def main(tag):
     dockerfile = "Dockerfile.{}".format(tag)
     print("Building and running: {}".format(tag))
     os.system("docker run --rm -it $(DOCKER_BUILDKIT=1 docker build -t {} -f {} --ssh github=/home/martin/.ssh/id_rsa -q .)".format(
-            tag, os.path.join(os.path.dirname(os.environ["DOCKER_UP_DOCKERFILES_DIR"]), dockerfile))
+            tag, os.path.join(os.path.dirname(os.environ["DOUP_SEARCHDIR"]), dockerfile))
         )
     os.system("docker rmi {}".format(tag))
     print("Success.")
