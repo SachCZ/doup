@@ -1,0 +1,22 @@
+#!/usr/bin/python3
+
+import sys
+import os
+
+def main(tag):
+    dockerfile = "Dockerfile.{}".format(tag)
+    print("Building and running: {}".format(tag))
+    os.system("docker run --rm -it $(DOCKER_BUILDKIT=1 docker build -t {} -f {} --ssh github=/home/martin/.ssh/id_rsa -q .)".format(
+            tag, os.path.join(os.path.dirname(os.environ["DOCKER_UP_DOCKERFILES_DIR"]), dockerfile))
+        )
+    os.system("docker rmi {}".format(tag))
+    print("Success.")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Error: Requires exactly one argument!")
+        sys.exit(1)
+    main(sys.argv[1])
+
+

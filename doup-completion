@@ -1,0 +1,15 @@
+#/usr/bin/env bash
+_docker-up()
+{
+    if [ "${#COMP_WORDS[@]}" != "2" ]; then
+        return
+    fi
+    local replies=()
+    for entry in "${DOCKER_UP_DOCKERFILES}"/Dockerfile.*
+    do
+        replies+=($( awk -F'Dockerfile.' '{print $2}' <<< $entry))
+    done
+    COMPREPLY=($(compgen -W "${replies[*]}" "${COMP_WORDS[1]}"))
+}
+
+complete -F _docker-up docker-up
