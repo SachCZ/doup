@@ -6,11 +6,19 @@ import os
 def main(tag):
     dockerfile = "Dockerfile.{}".format(tag)
     print("Building and running: {}".format(tag))
-    command = "docker run --rm -it $(DOCKER_BUILDKIT=1 docker build -t {} -f {} --ssh github={}/.ssh/id_rsa -q .)".format(
-            tag, os.path.join(os.environ["DOUP_SEARCHDIR"], dockerfile), os.environ["HOME"]
+    build_command = "DOCKER_BUILDKIT=1 docker build -t {} -f {} --ssh github={} .".format(
+        tag,
+        os.path.join(os.environ["DOUP_SEARCHDIR"], dockerfile),
+        os.path.join(os.environ["HOME"], ".ssh/id_rsa")
     )
-    print(command)
-    os.system(command)
+    print(build_command)
+    os.system(build_command)
+    run_command = "docker run -v {}:/home/devuser/.ssh --rm -it {}".format(
+        os.path.join(os.environ["HOME"], ".ssh"),
+        tag
+    )
+    print(run_command)
+    os.system(run_command)
     os.system("docker rmi {}".format(tag))
     print("Success.")
 
