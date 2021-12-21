@@ -13,8 +13,14 @@ def main(tag):
     )
     print(build_command)
     os.system(build_command)
-    run_command = "docker run -v {}:/home/devuser/.ssh --rm -it {}".format(
+    is_repo = os.path.isdir(os.path.join(os.getcwd(), ".git"))
+    mount_path = os.path.join("/home/devuser",os.path.basename(os.getcwd()))
+    volume_mount = "-v {}:{}".format(os.getcwd(), mount_path) if is_repo else ""
+    if is_repo:
+    	print("CWD is repo, mounting it to {}".format(mount_path))
+    run_command = "docker run -v {}:/home/devuser/.ssh {} --rm -it {}".format(
         os.path.join(os.environ["HOME"], ".ssh"),
+        volume_mount,
         tag
     )
     print(run_command)
