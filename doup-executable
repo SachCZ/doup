@@ -5,13 +5,13 @@ import os
 
 def main(tag):
     base_dir = os.path.join(os.environ["DOUP_SEARCHDIR"], tag)
-    if not os.path.isdir(base_dir)):
+    if not os.path.isdir(base_dir):
         raise RuntimeError("{} is not a dir!".format(base_dir))
 
     print("Building and running: {}".format(tag))
     build_command = "DOCKER_BUILDKIT=1 docker build -t {} -f {} --ssh github={} .".format(
         tag,
-        os.path.join(base_dir, , "Dockerfile"),
+        os.path.join(base_dir, "Dockerfile"),
         os.path.join(os.environ["HOME"], ".ssh/id_rsa")
     )
     print(build_command)

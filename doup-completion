@@ -5,9 +5,10 @@ _doup()
         return
     fi
     local replies=()
-    for entry in "${DOUP_SEARCHDIR}"/Dockerfile.*
-    do
-        replies+=($( awk -F'Dockerfile.' '{print $2}' <<< $entry))
+    for entry in "${DOUP_SEARCHDIR}/"*; do
+        if [ -d $entry ]; then
+            replies+=($( basename $entry))
+        fi
     done
     COMPREPLY=($(compgen -W "${replies[*]}" "${COMP_WORDS[1]}"))
 }
