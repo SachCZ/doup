@@ -4,20 +4,23 @@ import sys
 import os
 
 def main(tag):
-    dockerfile = "Dockerfile.{}".format(tag)
+    base_dir = os.path.join(os.environ["DOUP_SEARCHDIR"], tag)
+    if not os.path.isdir(base_dir)):
+        raise RuntimeError("{} is not a dir!".format(base_dir))
+
     print("Building and running: {}".format(tag))
     build_command = "DOCKER_BUILDKIT=1 docker build -t {} -f {} --ssh github={} .".format(
         tag,
-        os.path.join(os.environ["DOUP_SEARCHDIR"], dockerfile),
+        os.path.join(base_dir, , "Dockerfile"),
         os.path.join(os.environ["HOME"], ".ssh/id_rsa")
     )
     print(build_command)
     os.system(build_command)
-    is_repo = os.path.isdir(os.path.join(os.getcwd(), ".git"))
-    mount_path = os.path.join("/home/devuser",os.path.basename(os.getcwd()))
-    volume_mount = "-v {}:{}".format(os.getcwd(), mount_path) if is_repo else ""
-    if is_repo:
-    	print("CWD is repo, mounting it to {}".format(mount_path))
+    local_dir_path = os.path.join(base_dir, "home")
+    if not os.path.isdir(local_dir_path):
+        raise RuntimeError("{} is not a dir!".format(local_dir_path))
+    volume_mount = "-v {}:{}".format(local_dir_path, "/home/devuser")
+    print("Mounting {} to /home/devuser.".format(local_dir_path))
     run_command = "docker run -v {}:/home/devuser/.ssh {} --rm -it {}".format(
         os.path.join(os.environ["HOME"], ".ssh"),
         volume_mount,
