@@ -9,14 +9,15 @@ def get_base_dir(tag):
 
 
 def build(tag):
-    dockerfile = os.path.join(get_base_dir(tag), "Dockerfile")
-    build_command = "DOCKER_BUILDKIT=1 docker build -t {} -f {} {}".format(tag, dockerfile, os.environ["HOME"])
-    subprocess.check_output(build_command, shell=True)
+    context = os.path.join(get_base_dir(tag), "context")
+    build_command = "tar -czh . | DOCKER_BUILDKIT=1 docker build -t {} -".format(tag)
+    subprocess.check_output(build_command, shell=True, cwd=context)
 
 
 def run(tag):
     local_dir_path = os.path.join(get_base_dir(tag), "home")
     mounts = [
+        (os.path.join(get_base_dir(tag), "context"), "/home/devuser/context"),
         (os.path.join(os.environ["HOME"], ".ssh"), "/home/devuser/.ssh"),
         (os.path.join(os.environ["HOME"], ".bashrc"), "/home/devuser/.bashrc"),
         (os.path.join(os.environ["HOME"], ".gitconfig"), "/home/devuser/.gitconfig"),
