@@ -35,7 +35,7 @@ def build(tag):
 
 
 def run(tag):
-    local_dir_path = os.path.join(get_base_dir(tag), "home")
+    local_dir_path = os.path.join(get_base_dir(tag), "workspace")
     mounts = [
         (os.path.join(get_base_dir(tag), "context"), "/home/devuser/context"),
         (os.path.join(os.environ["HOME"], ".ssh"), "/home/devuser/.ssh"),
