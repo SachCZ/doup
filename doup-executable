@@ -5,12 +5,31 @@ import os
 import subprocess
 
 
+def is_image(tag):
+    output = subprocess.check_output(["docker", "image", "list"])
+    lines = output.split(b"\n")[:-1]
+    repositories = [line.split()[0].decode() for line in lines][1:]
+    return tag in repositories
+
+
 def get_base_dir(tag):
     return os.path.join(os.environ["DOUP_SEARCHDIR"], tag)
 
 
+def get_parent_tag(context):
+    with open(os.path.join(context, "Dockerfile")) as f:
+        for line in f:
+            if line[:4] == "FROM":
+                return line.split()[1]
+    raise RuntimeError("There seems to be no FROM statement in the Dockerfile.")
+
+
 def build(tag):
     context = os.path.join(get_base_dir(tag), "context")
+    parent_tag = get_parent_tag(context)
+    parent_context = os.path.join(get_base_dir(parent_tag), "context")
+    if not is_image(parent_tag) and os.path.exists(parent_context):
+        build(parent_tag)
     build_command = "tar -czh . | DOCKER_BUILDKIT=1 docker build -t {} -".format(tag)
     subprocess.check_output(build_command, shell=True, cwd=context)
 
@@ -38,13 +57,6 @@ def is_running(tag):
     lines = output.split(b"\n")[:-1]
     tags = [line.split()[-1].decode() for line in lines][1:]
     return tag in tags
-
-
-def is_image(tag):
-    output = subprocess.check_output(["docker", "image", "list"])
-    lines = output.split(b"\n")[:-1]
-    repositories = [line.split()[0].decode() for line in lines][1:]
-    return tag in repositories
 
 
 def connect(tag):
