@@ -81,7 +81,7 @@ def connect(tag):
 
 
 def remove_image(tag):
-    if is_running(tag):
+    if is_existing(tag):
         stop(tag)
     subprocess.check_output(["docker", "rmi", tag])
 
