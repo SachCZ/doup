@@ -57,6 +57,7 @@ def run(tag):
         (os.path.join(os.environ["HOME"], ".ssh"), "/home/devuser/.ssh"),
         (os.path.join(os.environ["HOME"], ".bashrc"), "/home/devuser/.bashrc"),
         (os.path.join(os.environ["HOME"], ".gitconfig"), "/home/devuser/.gitconfig"),
+        (os.path.join(os.environ["HOME"], ".rbtools-cookies"), "/home/devuser/.rbtools-cookies"),
         (local_dir_path, "/home/devuser/workspace")
     ]
     for local_path, _ in mounts:
