@@ -51,20 +51,23 @@ def build(tag):
 def run(tag):
     if is_existing(tag):
         stop(tag)
-    local_dir_path = os.path.join(get_base_dir(tag), "workspace")
+
+    user_mounts = []
+    user_mounts_file_path = os.path.join(os.environ["DOUP_SEARCHDIR"], "mounts")
+    if os.path.exists(user_mounts_file_path):
+        with open(user_mounts_file_path) as f:
+            user_mounts = [mount.strip() for mount in f.readlines()]
+
     mounts = [
         (os.path.join(get_base_dir(tag), "context"), "/home/devuser/context"),
-        (os.path.join(os.environ["HOME"], ".ssh"), "/home/devuser/.ssh"),
-        (os.path.join(os.environ["HOME"], ".bashrc"), "/home/devuser/.bashrc"),
-        (os.path.join(os.environ["HOME"], ".gitconfig"), "/home/devuser/.gitconfig"),
-        (os.path.join(os.environ["HOME"], ".rbtools-cookies"), "/home/devuser/.rbtools-cookies"),
-        (local_dir_path, "/home/devuser/workspace")
+        (os.path.join(get_base_dir(tag), "workspace"), "/home/devuser/workspace")
     ]
     for local_path, _ in mounts:
         if not os.path.exists(local_path):
             raise RuntimeError("Cant mount {} it is not a dir/file!".format(local_path))
 
-    run_command = "docker run {} --network host -td --name {} {}".format(
+    run_command = "docker run {} {} --network host -td --name {} {}".format(
+        " ".join("-v {}".format(mount) for mount in user_mounts),
         " ".join("-v {}:{}".format(local_path, docker_path) for local_path, docker_path in mounts), tag, tag)
     subprocess.check_output(run_command, shell=True)
 
