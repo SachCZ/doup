@@ -44,7 +44,7 @@ def build(tag):
     parent_context = os.path.join(get_base_dir(parent_tag), "context")
     if not is_image(parent_tag) and os.path.exists(parent_context):
         build(parent_tag)
-    build_command = "tar -czh . | DOCKER_BUILDKIT=1 docker build -t {} -".format(tag)
+    build_command = "tar -czh . | DOCKER_BUILDKIT=1 docker build --no-cache -t {} -".format(tag)
     subprocess.check_output(build_command, shell=True, cwd=context)
 
 
