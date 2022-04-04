@@ -23,7 +23,10 @@ The folders must obey this structure:
 <searchdir>/myawsomedocker/workspace
 ```
 The directories `workspace` and `context` will be mounted to the docker image. `context` is used during
-build.
+build. Other files you wish to mount to the docker can be specified in `<searchdir>/mounts`, eg.:
+```
+$HOME/.ssh:/home/devuser/.ssh
+```
 
 Use `doup myawsomedocker` to run, `doup myawsomedocker stop` to stop and `doup myawsomedocker
 update` to rebuild the image.
