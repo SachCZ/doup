@@ -80,7 +80,7 @@ def is_running(tag):
 
 
 def connect(tag):
-    os.system("docker exec -it {} /usr/bin/bash".format(tag))
+    os.system("docker exec -it {} /usr/bin/env bash".format(tag))
 
 
 def remove_image(tag):
