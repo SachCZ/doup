@@ -1,0 +1,5 @@
+*file=.gitconfig
+
+RUN apt -y install git
+COPY .gitconfig /home/devuser/.gitconfig
+RUN chown -R devuser /home/devuser/.gitconfig; chgrp -R devuser /home/devuser/.gitconfig

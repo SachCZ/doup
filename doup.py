@@ -5,7 +5,8 @@ import os
 import subprocess
 import tempfile
 from distutils.dir_util import copy_tree
-import shutil, errno
+import shutil
+import errno
 
 
 def is_image(tag):
@@ -15,11 +16,13 @@ def is_image(tag):
     return tag in repositories
 
 
+searchdir = os.path.join(os.environ["HOME"], ".doupworkspace")
+snippets_dir = os.path.join(searchdir, "snippets")
+mounts_file_path = os.path.join(searchdir, "mounts")
+
+
 def get_base_dir(tag):
-    return os.path.join(os.environ["DOUP_SEARCHDIR"], tag)
-
-
-snippets_dir = os.path.join(os.environ["DOUP_SEARCHDIR"], "snippets")
+    return os.path.join(searchdir, tag)
 
 
 def get_parent_tag(context):
@@ -87,12 +90,13 @@ def generate_dockerfile_lines(dockerfile, temp_context_dir):
     # Has pretty nasty side effect.
     with open(dockerfile) as f:
         for line in f:
-            snippet_name = get_snippet_name()
+            snippet_name = get_snippet_name(line)
             if snippet_name:
                 copy_snippet_files(snippet_name, temp_context_dir)
                 for snippet_line in get_snippet_lines(snippet_name):
                     yield snippet_line
-            yield line
+            else:
+                yield line
 
 
 def build(tag):
@@ -121,9 +125,8 @@ def run(tag):
         stop(tag)
 
     user_mounts = []
-    user_mounts_file_path = os.path.join(os.environ["DOUP_SEARCHDIR"], "mounts")
-    if os.path.exists(user_mounts_file_path):
-        with open(user_mounts_file_path) as f:
+    if os.path.exists(mounts_file_path):
+        with open(mounts_file_path) as f:
             user_mounts = [mount.strip() for mount in f.readlines()]
 
     mounts = [

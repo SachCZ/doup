@@ -1,0 +1,8 @@
+RUN apt install -y software-properties-common
+RUN apt -y install bash-completion
+RUN apt -y install curl
+RUN apt -y install wget
+RUN apt -y install bash
+RUN apt -y install python3-pip
+RUN apt -y install less
+RUN apt -y install sudo

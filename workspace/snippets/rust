@@ -1,0 +1,8 @@
+USER devuser
+WORKDIR /home/devuser
+
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
+RUN PATH=$PATH:/home/devuser/.cargo/bin rustup component add rls
+
+USER root
+WORKDIR /

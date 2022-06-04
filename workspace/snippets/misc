@@ -1,0 +1,8 @@
+RUN apt -y install equivs
+RUN apt -y install devscripts
+RUN apt -y install pcre2-utils
+RUN apt -y install mc
+RUN apt -y install vim
+RUN apt -y install apt-file
+
+RUN pip3 install -U RBTools

@@ -1,0 +1,7 @@
+RUN apt-get update
+RUN apt -y install g++-10
+RUN apt -y install clangd-11 clang-tidy-11
+RUN ln -s /usr/bin/clangd-11 /usr/bin/clangd
+RUN apt -y install cmake
+RUN apt -y install gdb
+RUN apt -y install bear

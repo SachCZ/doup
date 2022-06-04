@@ -1,0 +1,14 @@
+*file=.tmux.conf
+
+RUN apt -y install tmux
+
+COPY .tmux.conf /home/devuser/.tmux.conf
+RUN chown -R devuser /home/devuser/.tmux.conf; chgrp -R devuser /home/devuser/.tmux.conf
+
+USER devuser
+WORKDIR /home/devuser
+
+RUN git clone https://github.com/tmux-plugins/tmux-resurrect ~/.tmux-ressurrect
+
+USER root
+WORKDIR /

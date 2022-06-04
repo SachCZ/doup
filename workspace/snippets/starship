@@ -1,0 +1,15 @@
+*file=.bashrc
+
+COPY .bashrc /home/devuser/.bashrc
+RUN chown -R devuser /home/devuser/.bashrc; chgrp -R devuser /home/devuser/.bashrc
+
+USER devuser
+WORKDIR /home/devuser
+
+RUN wget https://starship.rs/install.sh -O starship_install.sh
+RUN chmod +x starship_install.sh
+RUN sudo ./starship_install.sh --yes
+RUN rm -rf starship_install.sh
+
+USER root
+WORKDIR /

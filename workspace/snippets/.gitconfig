@@ -1,0 +1,7 @@
+[user]
+	name = Martin Šach
+	email = martin.sach@firma.seznam.cz
+[alias]
+	tag-changelog = "!f() { GIT_TOPLEVEL=$(git rev-parse --show-toplevel); CHANGELOG_VERSION=$(head -1 \"${GIT_TOPLEVEL}/debian/changelog\" | grep -o -E '[0-9]+.[0-9]+.[0-9]+(-[0-9]+)?'); LAST_CHANGELOG=$(head -8 \"${GIT_TOPLEVEL}/debian/changelog\" | tail -7 | pcre2grep -M -o '\n(  [^\n]+\n)+\n' | sed  '/^$/d' | sed 's/  / /g' ); git add \"${GIT_TOPLEVEL}/debian/changelog\" && git commit -m \"Version ${CHANGELOG_VERSION}\" && git tag -a \"version-${CHANGELOG_VERSION}\" -m \"${LAST_CHANGELOG}\"; }; f";
+	lg = !git --no-pager log -10 --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+        gn = !git --no-pager grep -n

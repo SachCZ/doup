@@ -5,7 +5,7 @@ _doup()
         return
     fi
     local replies=()
-    for entry in "${DOUP_SEARCHDIR}/"*; do
+    for entry in "${HOME}/.doupworkspace/"*; do
         if [ -d $entry ]; then
             replies+=($( basename $entry))
         fi

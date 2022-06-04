@@ -1,0 +1,2 @@
+$HOME/.ssh:/home/devuser/.ssh
+$HOME/.tmux:/home/devuser/.tmux
