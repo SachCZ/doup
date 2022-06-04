@@ -3,7 +3,9 @@
 import sys
 import os
 import subprocess
-
+import tempfile
+from distutils.dir_util import copy_tree
+import shutil, errno
 
 def is_image(tag):
     output = subprocess.check_output(["docker", "image", "list"])
@@ -44,8 +46,36 @@ def build(tag):
     parent_context = os.path.join(get_base_dir(parent_tag), "context")
     if not is_image(parent_tag) and os.path.exists(parent_context):
         build(parent_tag)
+
+    temporary_context_dir = tempfile.mkdtemp()
+    copy_tree(context, temporary_context_dir)
+    dockerfile_lines = []
+    with open(os.path.join(temporary_context_dir, "Dockerfile")) as f:
+        for line in f:
+            striped_line = line.strip()
+            if len(striped_line) > 0 and striped_line[0] == "*":
+                snippets_dir = os.path.join(os.environ["DOUP_SEARCHDIR"], "snippets")
+                with open(os.path.join(snippets_dir, striped_line[1:])) as snippet:
+                    for snippet_line in snippet:
+                        if len(snippet_line) > 6 and snippet_line[:6] == "*file=":
+                            file_name = snippet_line[6:].strip()
+                            src = os.path.join(snippets_dir, file_name)
+                            dst = os.path.join(temporary_context_dir, file_name)
+                            try:
+                                shutil.copytree(src, dst)
+                            except OSError as exc:
+                                if exc.errno in (errno.ENOTDIR, errno.EINVAL):
+                                    shutil.copy(src, dst)
+                                else: raise
+                        else:
+                            dockerfile_lines.append(snippet_line)
+            else:
+                dockerfile_lines.append(line)
+    with open(os.path.join(temporary_context_dir, "Dockerfile"), "w") as f:
+        f.writelines(dockerfile_lines)
+
     build_command = "tar -czh . | DOCKER_BUILDKIT=1 docker build --no-cache -t {} -".format(tag)
-    subprocess.check_output(build_command, shell=True, cwd=context)
+    subprocess.check_output(build_command, shell=True, cwd=temporary_context_dir)
 
 
 def run(tag):
