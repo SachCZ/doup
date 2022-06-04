@@ -7,6 +7,7 @@ import tempfile
 from distutils.dir_util import copy_tree
 import shutil, errno
 
+
 def is_image(tag):
     output = subprocess.check_output(["docker", "image", "list"])
     lines = output.split(b"\n")[:-1]
@@ -16,6 +17,9 @@ def is_image(tag):
 
 def get_base_dir(tag):
     return os.path.join(os.environ["DOUP_SEARCHDIR"], tag)
+
+
+snippets_dir = os.path.join(os.environ["DOUP_SEARCHDIR"], "snippets")
 
 
 def get_parent_tag(context):
@@ -38,6 +42,59 @@ def stop(tag):
     subprocess.check_output(["docker", "rm", tag])
 
 
+def get_snippet_name(line):
+    striped_line = line.strip()
+    if len(striped_line) > 0 and striped_line[0] == "*":
+        return striped_line[1:]
+    return None
+
+
+def copy_file(src, dst):
+    try:
+        shutil.copytree(src, dst)
+    except OSError as exc:
+        if exc.errno in (errno.ENOTDIR, errno.EINVAL):
+            shutil.copy(src, dst)
+        else:
+            raise OSError("Failed to copy {} to {}.".format(src, dst))
+
+
+def get_file_name(line):
+    striped_line = line.strip()
+    if len(striped_line) > 6 and striped_line[:6] == "*file=":
+        return striped_line[6:]
+    return None
+
+
+def copy_snippet_files(snippet_name, destionation):
+    with open(os.path.join(snippets_dir, snippet_name)) as snippet:
+        for snippet_line in snippet:
+            file_name = get_file_name(snippet_line)
+            if file_name:
+                src = os.path.join(snippets_dir, file_name)
+                dst = os.path.join(destionation, file_name)
+                copy_file(src, dst)
+
+
+def get_snippet_lines(snippet_name):
+    with open(os.path.join(snippets_dir, snippet_name)) as snippet:
+        for snippet_line in snippet:
+            if not get_file_name(snippet_line):
+                yield snippet_line
+
+
+def generate_dockerfile_lines(dockerfile, temp_context_dir):
+    # Has pretty nasty side effect.
+    with open(dockerfile) as f:
+        for line in f:
+            snippet_name = get_snippet_name()
+            if snippet_name:
+                copy_snippet_files(snippet_name, temp_context_dir)
+                for snippet_line in get_snippet_lines(snippet_name):
+                    yield snippet_line
+            yield line
+
+
 def build(tag):
     if is_existing(tag):
         stop(tag)
@@ -47,35 +104,16 @@ def build(tag):
     if not is_image(parent_tag) and os.path.exists(parent_context):
         build(parent_tag)
 
-    temporary_context_dir = tempfile.mkdtemp()
-    copy_tree(context, temporary_context_dir)
+    temp_context_dir = tempfile.mkdtemp()
+    copy_tree(context, temp_context_dir)
     dockerfile_lines = []
-    with open(os.path.join(temporary_context_dir, "Dockerfile")) as f:
-        for line in f:
-            striped_line = line.strip()
-            if len(striped_line) > 0 and striped_line[0] == "*":
-                snippets_dir = os.path.join(os.environ["DOUP_SEARCHDIR"], "snippets")
-                with open(os.path.join(snippets_dir, striped_line[1:])) as snippet:
-                    for snippet_line in snippet:
-                        if len(snippet_line) > 6 and snippet_line[:6] == "*file=":
-                            file_name = snippet_line[6:].strip()
-                            src = os.path.join(snippets_dir, file_name)
-                            dst = os.path.join(temporary_context_dir, file_name)
-                            try:
-                                shutil.copytree(src, dst)
-                            except OSError as exc:
-                                if exc.errno in (errno.ENOTDIR, errno.EINVAL):
-                                    shutil.copy(src, dst)
-                                else: raise
-                        else:
-                            dockerfile_lines.append(snippet_line)
-            else:
-                dockerfile_lines.append(line)
-    with open(os.path.join(temporary_context_dir, "Dockerfile"), "w") as f:
+    temp_dockerfile = os.path.join(temp_context_dir, "Dockerfile")
+    dockerfile_lines = list(generate_dockerfile_lines(temp_dockerfile, temp_context_dir))
+    with open(os.path.join(temp_context_dir, "Dockerfile"), "w") as f:
         f.writelines(dockerfile_lines)
 
     build_command = "tar -czh . | DOCKER_BUILDKIT=1 docker build --no-cache -t {} -".format(tag)
-    subprocess.check_output(build_command, shell=True, cwd=temporary_context_dir)
+    subprocess.check_output(build_command, shell=True, cwd=temp_context_dir)
 
 
 def run(tag):
