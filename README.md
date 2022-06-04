@@ -10,17 +10,16 @@ sudo ./install.sh
 ```
 
 ## Usage
-You must set an `env` variable pointing to a dir containing directories with specified structure (`<searchdir>`). Put this into your
-`.bashrc`:
-
-```
-export DOUP_SEARCHDIR=<searchdir>
+Simply run:
+```bash
+doup devbuster
 ```
 
-The folders must obey this structure:
+You can (and should) add your own container ideally build on top of the provided containers. 
+To do so create:
 ```
-<searchdir>/myawsomedocker/context/Dockerfile
-<searchdir>/myawsomedocker/workspace
+~/.doupworkspace/myawsomedocker/context/Dockerfile
+~/.doupworkspace/myawsomedocker/workspace
 ```
 The directories `workspace` and `context` will be mounted to the docker image. `context` is used during
 build. Other files you wish to mount to the docker can be specified in `<searchdir>/mounts`, eg.:
