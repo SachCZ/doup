@@ -1,5 +1,3 @@
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
 local lspconfig = require('lspconfig')
 
 local on_attach = function(client, bufnr)
@@ -35,7 +33,6 @@ end
 
 lspconfig['clangd'].setup {
   on_attach = on_attach,
-  capabilities = capabilities,
   flags = {
     debounce_text_changes = 150,
   },
@@ -46,7 +43,6 @@ lspconfig['clangd'].setup {
 }
 lspconfig['pylsp'].setup {
   on_attach = on_attach,
-  capabilities = capabilities,
   flags = {
     debounce_text_changes = 150,
   },
@@ -54,4 +50,10 @@ lspconfig['pylsp'].setup {
   filetypes = { "python" },
   root_dir = lspconfig.util.root_pattern(".git") or dirname,
   single_file_support = true
+}
+lspconfig['rls'].setup {
+  on_attach = on_attach,
+  flags = {
+    debounce_text_changes = 150,
+  }
 }
