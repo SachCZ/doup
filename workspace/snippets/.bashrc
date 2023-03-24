@@ -137,9 +137,14 @@ eval "$(starship init bash)"
 
 export DOUP_SEARCHDIR="$HOME/doupworkspace"
 
-sudo groupdel docker || true
-sudo groupadd -g $(ls -ld /var/run/docker.sock | cut -f4 -d" ") docker
-#sudo usermod -aG docker devuser
-#newgrp dockeh
+if [ -f ~/.reloaded_marker ]; then
+    rm ~/.reloaded_marker
+else
+    sudo groupdel docker || true
+    sudo groupadd -g $(ls -ld /var/run/docker.sock | cut -f4 -d" ") docker
+    sudo usermod -aG docker devuser
+    touch ~/.reloaded_marker
+    newgrp docker
+fi
 
 tmux attach || true
