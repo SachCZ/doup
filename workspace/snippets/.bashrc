@@ -136,3 +136,5 @@ alias tmux="tmux -u"
 eval "$(starship init bash)"
 
 export DOUP_SEARCHDIR="$HOME/doupworkspace"
+
+tmux attach || true

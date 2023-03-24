@@ -1,2 +1,4 @@
 $HOME/.ssh:/home/devuser/.ssh
 $HOME/.tmux:/home/devuser/.tmux
+$HOME/.kube:/home/devuser/.kube
+/var/run/docker.sock:/var/run/docker.sock
