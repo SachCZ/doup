@@ -6,7 +6,7 @@ Doup is a simple script enabling to build and run a docker container from a Dock
 From version 5 onward simply download the release or clone this repo. Then run
 
 ```bash
-sudo ./install.sh
+./install.sh
 ```
 
 ## Usage
