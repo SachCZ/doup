@@ -144,7 +144,7 @@ else
     sudo groupadd -g $(ls -ld /var/run/docker.sock | cut -f4 -d" ") docker
     sudo usermod -aG docker devuser
     touch ~/.reloaded_marker
-    newgrp docker
+    exec sg docker "newgrp `id -gn`"
 fi
 
 tmux attach || true
