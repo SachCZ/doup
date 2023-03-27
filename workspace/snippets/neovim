@@ -16,7 +16,10 @@ WORKDIR /home/devuser
 
 RUN rm -rf -- ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 RUN git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+
 RUN git clone https://github.com/github/copilot.vim.git ~/.config/nvim/pack/github/start/copilot.vim
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get install -y nodejs
+
 RUN nvim --headless -c 'autocmd User VimspectorInstallSuccess qa!' -c 'autocmd User VimspectorInstallFailed cquit!' -c 'PackerSync'
 
 USER root
