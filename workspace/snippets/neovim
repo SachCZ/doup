@@ -8,6 +8,8 @@ RUN ln -s /squashfs-root/usr/bin/nvim /usr/bin/nvim
 RUN pip3 install --upgrade 'python-lsp-server[all]'
 RUN pip3 install --upgrade 'pynvim'
 
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get install -y nodejs
+
 COPY .config/ /home/devuser/.config/
 RUN chown -R devuser /home/devuser/.config; chgrp -R devuser /home/devuser/.config
 
@@ -18,7 +20,6 @@ RUN rm -rf -- ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 RUN git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
 
 RUN git clone https://github.com/github/copilot.vim.git ~/.config/nvim/pack/github/start/copilot.vim
-RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get install -y nodejs
 
 RUN nvim --headless -c 'autocmd User VimspectorInstallSuccess qa!' -c 'autocmd User VimspectorInstallFailed cquit!' -c 'PackerSync'
 
