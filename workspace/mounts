@@ -1,4 +1,5 @@
 $HOME/.ssh:/home/devuser/.ssh
 $HOME/.tmux:/home/devuser/.tmux
 $HOME/.kube:/home/devuser/.kube
+$HOME/.config/github-copilot:/home/devuser/.config/github-copilot
 /var/run/docker.sock:/var/run/docker.sock
