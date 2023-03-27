@@ -12,3 +12,6 @@ vim.api.nvim_set_keymap('n', '<Leader>dr', '<Plug>VimspectorRestart', {})
 vim.api.nvim_set_keymap('n', '<Leader>dc', ':call vimspector#Continue()<CR>', {noremap = true})
 vim.api.nvim_set_keymap('', '<C-l>', ':pyf /usr/share/vim/addons/syntax/clang-format.py<cr>', {})
 vim.api.nvim_set_keymap('i', '<C-l>', '<c-o>:pyf /usr/share/vim/addons/syntax/clang-format.py<cr>', {})
+
+vim.g.copilot_no_tab_map = true
+vim.api.nvim_set_keymap("i", "<C-J>", 'copilot#Accept("<CR>")', { silent = true, expr = true })
