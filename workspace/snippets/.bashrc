@@ -137,10 +137,6 @@ eval "$(starship init bash)"
 
 export DOUP_SEARCHDIR="$HOME/doupworkspace"
 
-sudo groupdel docker || true
-sudo groupadd -g $(ls -ld /var/run/docker.sock | cut -f4 -d" ") docker
-sudo usermod -aG docker devuser
-
 cd workspace/*/ > /dev/null 2>&1 || true
 
 if [ -z "$TMUX" ] && [ ${UID} != 0 ]
