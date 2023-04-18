@@ -142,7 +142,7 @@ def run(tag):
         " ".join("-v {}:{}".format(local_path, docker_path) for local_path, docker_path in mounts), tag, tag)
     subprocess.check_output(run_command, shell=True)
 
-    os.system('docker exec {} /usr/bin/env bash -c "groupdel docker || true; groupadd -g $(ls -ld /var/run/docker.sock | cut -f4 -d" ") docker; usermod -aG docker devuser;"'.format(tag))
+    os.system('docker exec {} /usr/bin/env bash -c "sudo groupdel docker || true; sudo groupadd -g $(ls -ld /var/run/docker.sock | cut -f4 -d" ") docker; sudo usermod -aG docker devuser;"'.format(tag))
     os.system("docker exec -it {} /usr/bin/env bash".format(tag))
 
 
