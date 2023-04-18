@@ -141,7 +141,7 @@ sudo groupdel docker || true
 sudo groupadd -g $(ls -ld /var/run/docker.sock | cut -f4 -d" ") docker
 sudo usermod -aG docker devuser
 
-cd workspace/*/ || true
+cd workspace/*/ > /dev/null 2>&1 || true
 
 if [ -z "$TMUX" ] && [ ${UID} != 0 ]
 then
