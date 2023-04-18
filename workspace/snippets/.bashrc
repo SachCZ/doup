@@ -141,4 +141,7 @@ sudo groupdel docker || true
 sudo groupadd -g $(ls -ld /var/run/docker.sock | cut -f4 -d" ") docker
 sudo usermod -aG docker devuser
 
-tmux attach || true
+if [ -z "$TMUX" ] && [ ${UID} != 0 ]
+then
+    tmux new-session -A -s main
+fi
