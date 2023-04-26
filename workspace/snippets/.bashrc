@@ -141,5 +141,5 @@ cd workspace/*/ > /dev/null 2>&1 || true
 
 if [ -z "$TMUX" ] && [ ${UID} != 0 ]
 then
-    tmux new-session -A -s main
+    tmux attach || true
 fi

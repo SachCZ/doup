@@ -143,6 +143,7 @@ def run(tag):
     subprocess.check_output(run_command, shell=True)
 
     subprocess.call(('docker exec {} /usr/bin/env bash -c "sudo groupdel docker || true; sudo groupadd -g $(ls -ld /var/run/docker.sock | cut -f4 -d" ") docker || true; sudo usermod -aG docker devuser; exit;"'.format(tag)))
+    subprocess.call(('docker exec {} /usr/bin/env bash -c "tmux new-session -d"'.format(tag)))
 
 
 
