@@ -8,3 +8,4 @@ RUN apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugi
 ARG docker_group_id
 RUN groupdel docker || true
 RUN groupadd -o -g $docker_group_id docker
+RUN usermod -a -G docker devuser
