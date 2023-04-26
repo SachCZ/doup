@@ -142,7 +142,7 @@ def run(tag):
         " ".join("-v {}:{}".format(local_path, docker_path) for local_path, docker_path in mounts), tag, tag)
     subprocess.check_output(run_command, shell=True)
 
-    os.system('docker exec {} /usr/bin/env bash -c "sudo groupdel docker || true; sudo groupadd -g $(ls -ld /var/run/docker.sock | cut -f4 -d" ") docker || true; sudo usermod -aG docker devuser; exit;"'.format(tag))
+    subprocess.check_output('docker exec {} /usr/bin/env bash -c "sudo groupadd -g $(ls -ld /var/run/docker.sock | cut -f4 -d\' \') docker || true; sudo usermod -aG docker devuser;"'.format(tag), shell=True)
     os.system('docker exec {} /usr/bin/env bash -c "tmux new-session -d"'.format(tag))
 
 
