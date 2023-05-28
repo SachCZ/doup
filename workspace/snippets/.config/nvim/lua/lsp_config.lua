@@ -51,7 +51,7 @@ lspconfig['pylsp'].setup {
   root_dir = lspconfig.util.root_pattern(".git") or dirname,
   single_file_support = true
 }
-lspconfig['rls'].setup {
+lspconfig['rust-analyzer'].setup {
   on_attach = on_attach,
   flags = {
     debounce_text_changes = 150,

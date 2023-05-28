@@ -3,5 +3,3 @@ RUN apt -y install devscripts
 RUN apt -y install pcre2-utils
 RUN apt -y install mc
 RUN apt -y install vim
-
-RUN pip3 install -U RBTools
