@@ -144,8 +144,6 @@ def run(tag):
         " ".join("-v {}:{}".format(local_path, docker_path) for local_path, docker_path in mounts), tag, tag)
     subprocess.check_output(run_command, shell=True)
 
-    os.system('docker exec {} /usr/bin/env bash -c "tmux new-session -d"'.format(tag))
-
 
 def is_running(tag):
     output = subprocess.check_output(["docker", "ps"])
