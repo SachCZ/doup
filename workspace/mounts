@@ -3,3 +3,4 @@ $HOME/.tmux:/home/devuser/.tmux
 $HOME/.kube:/home/devuser/.kube
 $HOME/.config/github-copilot:/home/devuser/.config/github-copilot
 /var/run/docker.sock:/var/run/docker.sock
+/run/mysqld/mysqld.sock:/run/mysqld/mysqld.sock
