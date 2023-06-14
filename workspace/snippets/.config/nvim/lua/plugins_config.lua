@@ -11,5 +11,6 @@ require('packer').startup(function(use)
   use { 'puremourning/vimspector', run = ':VimspectorInstall vscode-cpptools debugpy' } -- Debugger.
   use 'karb94/neoscroll.nvim' -- Smooth scrolling.
   use 'vim-airline/vim-airline' -- Bottom line showing some context.
+  use {'tanvirtin/vgit.nvim', requires = {'nvim-lua/plenary.nvim'}} -- Visual git
 end)
 

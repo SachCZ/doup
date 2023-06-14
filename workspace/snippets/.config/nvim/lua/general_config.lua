@@ -1,7 +1,6 @@
 vim.o.number = true	-- Show line numbers
 vim.o.relativenumber = true -- Show relative line numbers.
 vim.o.wrap = false	-- Wrap lines
-vim.o.textwidth=100	-- Line wrap (number of cols)
 vim.o.showmatch = true	-- Highlight matching brace
 vim.o.spell = false	-- Enable spell-checking
 vim.o.visualbell = true	-- Use visual bell (no beeping)
@@ -22,9 +21,12 @@ vim.o.backspace="indent,eol,start"	-- Backspace behaviour
 vim.o.undodir="/tmp/.vim/undodir" -- Set undodir location
 vim.o.undofile = true -- Persist undos
 vim.o.cursorline = true -- Highlight line where the cursor is.
+vim.o.updatetime = 300
+vim.wo.signcolumn = 'yes'
 
 vim.cmd('colorscheme darcula')
 vim.cmd('hi CursorLine cterm=NONE guifg=NONE')
 vim.o.termguicolors = true
 
 require('neoscroll').setup()
+require('vgit').setup()
